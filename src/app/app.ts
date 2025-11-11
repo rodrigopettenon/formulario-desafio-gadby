@@ -43,7 +43,7 @@ export class App {
         Validators.maxLength(50),
         Validators.pattern(/^[A-Za-zÀ-ÿ\s\-\.\/&]+$/)
       ]],
-      pretensaoSalarial: ['', [Validators.required, Validators.min(0)]],
+      pretensaoSalarial: ['', [Validators.required, Validators.min(1)]],
       experienciaArea: ['', Validators.required],
 
       cep: ['', [
