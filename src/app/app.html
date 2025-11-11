@@ -1,0 +1,292 @@
+<div class="container">
+  <h1>Formulário de Cadastro</h1>
+  
+  <div class="etapas">
+    <div class="etapa" [class.ativa]="etapaAtual === 1">
+      <span class="numero">1</span>
+      <span class="titulo">Dados Básicos</span>
+    </div>
+    <div class="etapa" [class.ativa]="etapaAtual === 2">
+      <span class="numero">2</span>
+      <span class="titulo">Profissional</span>
+    </div>
+    <div class="etapa" [class.ativa]="etapaAtual === 3">
+      <span class="numero">3</span>
+      <span class="titulo">Endereço</span>
+    </div>
+  </div>
+
+  <form [formGroup]="formulario" class="formulario">
+    
+    <div class="etapa-form" *ngIf="etapaAtual === 1">
+      <h2>Dados Básicos</h2>
+      
+      <div class="campo">
+        <label for="nomeCompleto">Nome Completo *</label>
+        <input 
+          type="text" 
+          id="nomeCompleto" 
+          formControlName="nomeCompleto"
+          [class.erro]="campoInvalido('nomeCompleto')"
+          placeholder="Digite seu nome completo">
+        <div class="mensagem-erro" *ngIf="campoInvalido('nomeCompleto')">
+          <span *ngIf="formulario.get('nomeCompleto')?.errors?.['required']">Nome completo é obrigatório</span>
+          <span *ngIf="formulario.get('nomeCompleto')?.errors?.['minlength']">Nome deve ter pelo menos 5 caracteres</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          [class.erro]="campoInvalido('email')"
+          placeholder="seu@email.com">
+        <div class="mensagem-erro" *ngIf="campoInvalido('email')">
+          <span *ngIf="formulario.get('email')?.errors?.['required']">E-mail é obrigatório</span>
+          <span *ngIf="formulario.get('email')?.errors?.['maxlength']">E-mail deve ter no máximo 80 caracteres</span>
+          <span *ngIf="formulario.get('email')?.errors?.['pattern']">Formato de e-mail inválido</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="telefone">Telefone *</label>
+        <input 
+          type="tel" 
+          id="telefone" 
+          formControlName="telefone"
+          [class.erro]="campoInvalido('telefone')"
+          (input)="aplicarMascaraTelefone($event)"
+          placeholder="(11) 99999-9999"
+          maxlength="15">
+        <div class="mensagem-erro" *ngIf="campoInvalido('telefone')">
+          <span *ngIf="formulario.get('telefone')?.errors?.['required']">Telefone é obrigatório</span>
+          <span *ngIf="formulario.get('telefone')?.errors?.['pattern']">Formato de telefone inválido. Use: (11) 99999-9999 ou 9999-9999</span>
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button type="button" class="btn avancar" (click)="avancarEtapa()">
+          Avançar →
+        </button>
+      </div>
+    </div>
+
+    <div class="etapa-form" *ngIf="etapaAtual === 2">
+      <h2>Informações Profissionais</h2>
+      
+      <div class="campo">
+        <label for="cargoPretendido">Cargo Pretendido *</label>
+        <input 
+          type="text" 
+          id="cargoPretendido" 
+          formControlName="cargoPretendido"
+          [class.erro]="campoInvalido('cargoPretendido')"
+          placeholder="Ex: Desenvolvedor de Sistemas">
+        <div class="mensagem-erro" *ngIf="campoInvalido('cargoPretendido')">
+          <span *ngIf="formulario.get('cargoPretendido')?.errors?.['required']">Cargo pretendido é obrigatório</span>
+          <span *ngIf="formulario.get('cargoPretendido')?.errors?.['minlength']">Cargo deve ter pelo menos 3 caracteres</span>
+          <span *ngIf="formulario.get('cargoPretendido')?.errors?.['maxlength']">Cargo deve ter no máximo 50 caracteres</span>
+          <span *ngIf="formulario.get('cargoPretendido')?.errors?.['pattern']">Cargo deve conter apenas letras, espaços e os caracteres: - . / &</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="pretensaoSalarial">Pretensão Salarial (R$) *</label>
+        <input 
+          type="number" 
+          id="pretensaoSalarial" 
+          formControlName="pretensaoSalarial"
+          [class.erro]="campoInvalido('pretensaoSalarial')"
+          placeholder="Ex: 2000"
+          min="0">
+        <div class="mensagem-erro" *ngIf="campoInvalido('pretensaoSalarial')">
+          <span *ngIf="formulario.get('pretensaoSalarial')?.errors?.['required']">Pretensão salarial é obrigatória</span>
+          <span *ngIf="formulario.get('pretensaoSalarial')?.errors?.['min']">Valor deve ser positivo</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Possui experiência na área? *</label>
+        <div class="radio-group">
+          <label>
+            <input 
+              type="radio" 
+              formControlName="experienciaArea" 
+              value="Sim"
+              [class.erro]="campoInvalido('experienciaArea')">
+            Sim
+          </label>
+          <label>
+            <input 
+              type="radio" 
+              formControlName="experienciaArea" 
+              value="Não"
+              [class.erro]="campoInvalido('experienciaArea')">
+            Não
+          </label>
+        </div>
+        <div class="mensagem-erro" *ngIf="campoInvalido('experienciaArea')">
+          Esta informação é obrigatória
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button type="button" class="btn voltar" (click)="voltarEtapa()">
+          ← Voltar
+        </button>
+        <button type="button" class="btn avancar" (click)="avancarEtapa()">
+          Avançar →
+        </button>
+      </div>
+    </div>
+
+    <div class="etapa-form" *ngIf="etapaAtual === 3">
+      <h2>Endereço</h2>
+      
+      <div class="campo">
+        <label for="cep">CEP *</label>
+        <input 
+          type="text" 
+          id="cep" 
+          formControlName="cep"
+          [class.erro]="campoInvalido('cep')"
+          (input)="aplicarMascaraCEP($event)"
+          placeholder="00000-000"
+          maxlength="9">
+        <div class="mensagem-erro" *ngIf="campoInvalido('cep')">
+          <span *ngIf="formulario.get('cep')?.errors?.['required']">CEP é obrigatório</span>
+          <span *ngIf="formulario.get('cep')?.errors?.['pattern']">Formato de CEP inválido (ex: 12345-678 ou 12345678)</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="logradouro">Logradouro *</label>
+        <input 
+          type="text" 
+          id="logradouro" 
+          formControlName="logradouro"
+          [class.erro]="campoInvalido('logradouro')"
+          placeholder="Rua, Avenida, etc.">
+        <div class="mensagem-erro" *ngIf="campoInvalido('logradouro')">
+          <span *ngIf="formulario.get('logradouro')?.errors?.['required']">Logradouro é obrigatório</span>
+          <span *ngIf="formulario.get('logradouro')?.errors?.['minlength']">Logradouro deve ter pelo menos 5 caracteres</span>
+          <span *ngIf="formulario.get('logradouro')?.errors?.['maxlength']">Logradouro deve ter no máximo 100 caracteres</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="cidade">Cidade *</label>
+        <input 
+          type="text" 
+          id="cidade" 
+          formControlName="cidade"
+          [class.erro]="campoInvalido('cidade')"
+          placeholder="Nome da cidade">
+        <div class="mensagem-erro" *ngIf="campoInvalido('cidade')">
+          <span *ngIf="formulario.get('cidade')?.errors?.['required']">Cidade é obrigatória</span>
+          <span *ngIf="formulario.get('cidade')?.errors?.['minlength']">Cidade deve ter pelo menos 2 caracteres</span>
+          <span *ngIf="formulario.get('cidade')?.errors?.['maxlength']">Cidade deve ter no máximo 50 caracteres</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="uf">UF *</label>
+        <input 
+          type="text" 
+          id="uf" 
+          formControlName="uf"
+          [class.erro]="campoInvalido('uf')"
+          placeholder="SP"
+          maxlength="2"
+          style="text-transform: uppercase;">
+        <div class="mensagem-erro" *ngIf="campoInvalido('uf')">
+          <span *ngIf="formulario.get('uf')?.errors?.['required']">UF é obrigatória</span>
+          <span *ngIf="formulario.get('uf')?.errors?.['minlength'] || formulario.get('uf')?.errors?.['maxlength']">UF deve ter 2 letras</span>
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button type="button" class="btn voltar" (click)="voltarEtapa()">
+          ← Voltar
+        </button>
+        <button type="button" class="btn enviar" (click)="enviarFormulario()">
+          Enviar
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="formularioEnviado" class="card-resumo-overlay">
+      <div class="card-resumo">
+        <div class="card-header">
+          <h2>Resumo do Formulário</h2>
+          <button class="btn-fechar" (click)="editarDados()">×</button>
+        </div>
+        
+        <div class="card-content">
+          <div class="dados-section">
+            <h3>Dados Básicos</h3>
+            <div class="dados-linha">
+              <span class="label">Nome:</span>
+              <span class="valor">{{ formulario.get('nomeCompleto')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">E-mail:</span>
+              <span class="valor">{{ formulario.get('email')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">Telefone:</span>
+              <span class="valor">{{ formulario.get('telefone')?.value }}</span>
+            </div>
+          </div>
+
+          <div class="dados-section">
+            <h3>Profissional</h3>
+            <div class="dados-linha">
+              <span class="label">Cargo:</span>
+              <span class="valor">{{ formulario.get('cargoPretendido')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">Pretensão Salarial:</span>
+              <span class="valor">R$ {{ formulario.get('pretensaoSalarial')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">Experiência:</span>
+              <span class="valor">{{ formulario.get('experienciaArea')?.value }}</span>
+            </div>
+          </div>
+
+          <div class="dados-section">
+            <h3>Endereço</h3>
+            <div class="dados-linha">
+              <span class="label">CEP:</span>
+              <span class="valor">{{ formulario.get('cep')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">Logradouro:</span>
+              <span class="valor">{{ formulario.get('logradouro')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">Cidade:</span>
+              <span class="valor">{{ formulario.get('cidade')?.value }}</span>
+            </div>
+            <div class="dados-linha">
+              <span class="label">UF:</span>
+              <span class="valor">{{ formulario.get('uf')?.value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button type="button" class="btn editar" (click)="editarDados()">
+            Editar Dados
+          </button>
+          <button type="button" class="btn confirmar" (click)="confirmarEnvio()">
+            Confirmar Envio
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
